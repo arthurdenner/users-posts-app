@@ -7,6 +7,7 @@ import { fetchPosts, fetchUserById } from '../services/api';
 import { IPost, IUser, Status } from '../types/global';
 
 interface PostsState {
+  error?: string;
   posts: IPost[];
   status: Status;
   user?: IUser;
@@ -36,16 +37,23 @@ class Posts extends React.Component<RouteComponentProps, PostsState> {
 
       this.setState({ posts, user, status: Status.LOADED });
     } catch (err) {
-      this.setState({ status: Status.ERROR });
-      alert(err.message);
+      this.setState({ error: err.message, status: Status.ERROR });
     }
   };
 
   render() {
-    const { posts, status, user } = this.state;
+    const { error, posts, status, user } = this.state;
 
     if (status === Status.LOADING) {
       return <EmptyContent message="Loading posts..." />;
+    }
+
+    if (error) {
+      return (
+        <EmptyContent message={error}>
+          <button onClick={this.fetchPosts}>Retry</button>
+        </EmptyContent>
+      );
     }
 
     if (!user || !('name' in user)) {

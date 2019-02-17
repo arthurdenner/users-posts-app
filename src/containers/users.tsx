@@ -5,6 +5,7 @@ import { fetchUsers } from '../services/api';
 import { Status, IUser } from '../types/global';
 
 interface UsersState {
+  error?: string;
   status: Status;
   users: IUser[];
 }
@@ -21,20 +22,29 @@ class Users extends React.Component<{}, UsersState> {
 
   fetchUsers = async () => {
     try {
+      this.setState({ status: Status.LOADING });
+
       const users = await fetchUsers();
 
       this.setState({ users, status: Status.LOADED });
     } catch (err) {
-      this.setState({ status: Status.ERROR });
-      alert(err.message);
+      this.setState({ error: err.message, status: Status.ERROR });
     }
   };
 
   render() {
-    const { status, users } = this.state;
+    const { error, status, users } = this.state;
 
     if (status === Status.LOADING) {
       return <EmptyContent message="Loading users..." />;
+    }
+
+    if (error) {
+      return (
+        <EmptyContent message={error}>
+          <button onClick={this.fetchUsers}>Retry</button>
+        </EmptyContent>
+      );
     }
 
     return (
