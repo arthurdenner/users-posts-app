@@ -8,8 +8,9 @@ const Application = () => (
   <BrowserRouter>
     <Switch>
       <Redirect exact from="/" to="/users" />
+      <Redirect exact from="/users/:userId" to="/users/:userId/posts" />
       <Route exact path="/users" component={Users} />
-      <Route path="/users/:userId/posts" component={Posts} />
+      <Route exact path="/users/:userId/posts" component={Posts} />
     </Switch>
   </BrowserRouter>
 );
