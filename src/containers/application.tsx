@@ -9,7 +9,7 @@ const Application = () => (
     <Switch>
       <Redirect exact from="/" to="/users" />
       <Route exact path="/users" component={Users} />
-      <Route path="/users/:userId" component={Posts} />
+      <Route path="/users/:userId/posts" component={Posts} />
     </Switch>
   </BrowserRouter>
 );

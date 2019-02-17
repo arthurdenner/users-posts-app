@@ -39,7 +39,7 @@ class Users extends React.Component<{}, UsersState> {
 
     return (
       <main>
-        <h1>Users</h1>
+        <h1>List of users</h1>
         {users.map(user => (
           <User key={user.id} user={user} />
         ))}
