@@ -9,3 +9,14 @@ it('renders the message provided as prop', () => {
 
   expect(getByTestId('empty-content-message')).toHaveTextContent(message);
 });
+
+it('renders its children properly', () => {
+  const childrenText = 'Find me';
+  const { getByText } = render(
+    <EmptyContent message="anything">
+      <div>{childrenText}</div>
+    </EmptyContent>
+  );
+
+  expect(getByText(childrenText)).toBeInTheDocument();
+});
