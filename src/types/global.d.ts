@@ -36,9 +36,3 @@ export interface IPost {
   title: string;
   body: string;
 }
-
-export enum Status {
-  ERROR,
-  LOADING,
-  LOADED,
-}

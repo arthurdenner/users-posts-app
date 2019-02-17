@@ -2,7 +2,13 @@ import React from 'react';
 import { EmptyContent } from '../components/empty-content';
 import { User } from '../components/user';
 import { fetchUsers } from '../services/api';
-import { Status, IUser } from '../types/global';
+import { IUser } from '../types/global';
+
+enum Status {
+  ERROR,
+  LOADING,
+  LOADED,
+}
 
 interface UsersState {
   error?: string;

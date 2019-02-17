@@ -4,7 +4,13 @@ import { EmptyContent } from '../components/empty-content';
 import { Post } from '../components/post';
 import { ReturnToUsers } from '../components/return-to-users';
 import { fetchPosts, fetchUserById } from '../services/api';
-import { IPost, IUser, Status } from '../types/global';
+import { IPost, IUser } from '../types/global';
+
+enum Status {
+  ERROR,
+  LOADING,
+  LOADED,
+}
 
 interface PostsState {
   error?: string;
@@ -56,7 +62,7 @@ class Posts extends React.Component<RouteComponentProps, PostsState> {
       );
     }
 
-    if (!user || !('name' in user)) {
+    if (!user) {
       return (
         <EmptyContent message="No posts found for the provided user">
           <ReturnToUsers />
