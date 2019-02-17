@@ -1,8 +1,8 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router';
-import { Link } from 'react-router-dom';
-import { Loading } from '../components/loading';
+import { EmptyContent } from '../components/empty-content';
 import { Post } from '../components/post';
+import { ReturnToUsers } from '../components/return-to-users';
 import { fetchPosts, fetchUserById } from '../services/api';
 import { IPost, IUser, Status } from '../types/global';
 
@@ -45,18 +45,20 @@ class Posts extends React.Component<RouteComponentProps, PostsState> {
     const { posts, status, user } = this.state;
 
     if (status === Status.LOADING) {
-      return <Loading message="Loading posts..." />;
+      return <EmptyContent message="Loading posts..." />;
     }
 
     if (!user || !('name' in user)) {
-      return <Loading message="No posts found for the provided user" />;
+      return (
+        <EmptyContent message="No posts found for the provided user">
+          <ReturnToUsers />
+        </EmptyContent>
+      );
     }
 
     return (
       <main>
-        <Link to="/users">
-          <p>Return to the list of users</p>
-        </Link>
+        <ReturnToUsers />
         <h1>List of posts from {user.name}</h1>
         {posts.map(post => (
           <Post key={post.id} post={post} />

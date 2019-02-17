@@ -1,5 +1,5 @@
 import React from 'react';
-import { Loading } from '../components/loading';
+import { EmptyContent } from '../components/empty-content';
 import { User } from '../components/user';
 import { fetchUsers } from '../services/api';
 import { Status, IUser } from '../types/global';
@@ -34,7 +34,7 @@ class Users extends React.Component<{}, UsersState> {
     const { status, users } = this.state;
 
     if (status === Status.LOADING) {
-      return <Loading message="Loading users..." />;
+      return <EmptyContent message="Loading users..." />;
     }
 
     return (
