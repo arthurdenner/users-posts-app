@@ -7,4 +7,4 @@ export const fetchUsers = (): Promise<IUser[]> =>
   fetch(getUrl('users')).then(response => response.json());
 
 export const fetchPosts = (userId: string): Promise<IPost[]> =>
-  fetch(getUrl(`posts?${userId}=1`)).then(response => response.json());
+  fetch(getUrl(`posts?userId=${userId}`)).then(response => response.json());

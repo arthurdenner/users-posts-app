@@ -24,10 +24,10 @@ class Posts extends React.Component<RouteComponentProps, PostsState> {
     const {
       match: { params },
     } = this.props;
-    const { idUser } = params as { idUser: string };
+    const { userId } = params as { userId: string };
 
     try {
-      const posts = await fetchPosts(idUser);
+      const posts = await fetchPosts(userId);
 
       this.setState({ posts, status: Status.LOADED });
     } catch (err) {
