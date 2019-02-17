@@ -5,6 +5,7 @@ require('dotenv').config();
 const path = require('path');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
@@ -78,7 +79,10 @@ module.exports = function(env, argv) {
     plugins: [cleanPlugin, HTMLWebpackPluginConfig].concat(
       isDev
         ? [new webpack.HotModuleReplacementPlugin()]
-        : [new MiniCssExtractPlugin({ filename: 'style.css' })]
+        : [
+            new MiniCssExtractPlugin({ filename: 'style.css' }),
+            new CopyPlugin([{ from: 'public/_redirects', to: '' }]),
+          ]
     ),
   };
 };
