@@ -1,14 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { IUser } from '../../types/global';
-import styles from './user.less';
+import { IUser } from '../types/global';
 
 interface UserProps {
   user: IUser;
 }
 
 const User: React.FC<UserProps> = ({ user }) => (
-  <div className={styles.container}>
+  <div className="card-container">
     <Link to={`/users/${user.id}/posts`}>
       <h2>{user.name}</h2>
     </Link>
