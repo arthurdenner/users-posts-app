@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { EmptyContent } from '../components/empty-content';
 import { Post } from '../components/post';
@@ -12,74 +12,65 @@ enum Status {
   LOADED,
 }
 
-interface PostsState {
-  error?: string;
-  posts: IPost[];
-  status: Status;
-  user?: IUser;
-}
+function Posts({ match }: RouteComponentProps) {
+  const { params } = match;
+  const { userId } = params as { userId: string };
+  const [status, setStatus] = useState(Status.LOADING);
+  const [posts, setPosts] = useState<IPost[]>([]);
+  const [user, setUser] = useState<IUser | undefined>(undefined);
+  const [error, setError] = useState<string | undefined>(undefined);
 
-class Posts extends React.Component<RouteComponentProps, PostsState> {
-  state: PostsState = {
-    posts: [],
-    status: Status.LOADING,
-  };
-
-  async componentDidMount() {
-    await this.fetchPosts();
-  }
-
-  fetchPosts = async () => {
-    const {
-      match: { params },
-    } = this.props;
-    const { userId } = params as { userId: string };
-
+  async function getUserAndTheirPosts() {
     try {
-      const [user, posts] = await Promise.all([
+      setStatus(Status.LOADING);
+
+      const [userResponse, postsResponse] = await Promise.all([
         fetchUserById(userId),
         fetchPosts(userId),
       ]);
 
-      this.setState({ posts, user, status: Status.LOADED });
+      setStatus(Status.LOADED);
+      setPosts(postsResponse);
+      setUser(userResponse);
     } catch (err) {
-      this.setState({ error: err.message, status: Status.ERROR });
+      setError(err.message);
+      setStatus(Status.ERROR);
     }
-  };
+  }
 
-  render() {
-    const { error, posts, status, user } = this.state;
+  useEffect(() => {
+    getUserAndTheirPosts();
+  }, []);
 
-    if (status === Status.LOADING) {
-      return <EmptyContent message="Loading posts..." />;
-    }
+  if (status === Status.LOADING) {
+    return <EmptyContent message="Loading posts..." />;
+  }
 
-    if (error) {
-      return (
-        <EmptyContent message={error}>
-          <button onClick={this.fetchPosts}>Retry</button>
-        </EmptyContent>
-      );
-    }
-
-    if (!user) {
-      return (
-        <EmptyContent message="No posts found for the provided user">
-          <ReturnToUsers />
-        </EmptyContent>
-      );
-    }
-
+  if (error) {
     return (
-      <main>
-        <ReturnToUsers />
-        <h1>List of posts from {user.name}</h1>
-        {posts.map(post => (
-          <Post key={post.id} post={post} />
-        ))}
-      </main>
+      <EmptyContent message={error}>
+        <button onClick={getUserAndTheirPosts}>Retry</button>
+      </EmptyContent>
     );
   }
+
+  if (!user) {
+    return (
+      <EmptyContent message="No posts found for the provided user">
+        <ReturnToUsers />
+      </EmptyContent>
+    );
+  }
+
+  return (
+    <main>
+      <ReturnToUsers />
+      <h1>List of posts from {user.name}</h1>
+      {posts.map(post => (
+        <Post key={post.id} post={post} />
+      ))}
+    </main>
+  );
 }
 
 export { Posts };
