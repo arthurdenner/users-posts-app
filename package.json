@@ -52,8 +52,8 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
-    "react": "^16.8.2",
-    "react-dom": "^16.8.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "react-router-dom": "^4.3.1"
   },
   "devDependencies": {
@@ -100,7 +100,7 @@
     "postcss-loader": "^3.0.0",
     "prettier": "^1.16.0",
     "react-hot-loader": "^4.6.3",
-    "react-testing-library": "^5.4.4",
+    "react-testing-library": "^6.0.3",
     "style-loader": "^0.23.1",
     "stylelint": "^9.10.1",
     "stylelint-no-unsupported-browser-features": "^3.0.2",
