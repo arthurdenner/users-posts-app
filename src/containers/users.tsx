@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { EmptyContent } from '../components/empty-content';
 import { User } from '../components/user';
 import { fetchUsers } from '../services/api';
@@ -10,58 +10,49 @@ enum Status {
   LOADED,
 }
 
-interface UsersState {
-  error?: string;
-  status: Status;
-  users: IUser[];
-}
+const Users = () => {
+  const [status, setStatus] = useState(Status.LOADING);
+  const [users, setUsers] = useState<IUser[]>([]);
+  const [error, setError] = useState<string | undefined>(undefined);
 
-class Users extends React.Component<{}, UsersState> {
-  state: UsersState = {
-    status: Status.LOADING,
-    users: [],
-  };
+  async function getUsers() {
+    try {
+      setStatus(Status.LOADING);
 
-  async componentDidMount() {
-    await this.fetchUsers();
+      const usersResponse = await fetchUsers();
+
+      setStatus(Status.LOADED);
+      setUsers(usersResponse);
+    } catch (err) {
+      setError(err.message);
+      setStatus(Status.ERROR);
+    }
   }
 
-  fetchUsers = async () => {
-    try {
-      this.setState({ status: Status.LOADING });
+  useEffect(() => {
+    getUsers();
+  }, []);
 
-      const users = await fetchUsers();
+  if (status === Status.LOADING) {
+    return <EmptyContent message="Loading users..." />;
+  }
 
-      this.setState({ users, status: Status.LOADED });
-    } catch (err) {
-      this.setState({ error: err.message, status: Status.ERROR });
-    }
-  };
-
-  render() {
-    const { error, status, users } = this.state;
-
-    if (status === Status.LOADING) {
-      return <EmptyContent message="Loading users..." />;
-    }
-
-    if (error) {
-      return (
-        <EmptyContent message={error}>
-          <button onClick={this.fetchUsers}>Retry</button>
-        </EmptyContent>
-      );
-    }
-
+  if (error) {
     return (
-      <main>
-        <h1>List of users</h1>
-        {users.map(user => (
-          <User key={user.id} user={user} />
-        ))}
-      </main>
+      <EmptyContent message={error}>
+        <button onClick={getUsers}>Retry</button>
+      </EmptyContent>
     );
   }
-}
+
+  return (
+    <main>
+      <h1>List of users</h1>
+      {users.map(user => (
+        <User key={user.id} user={user} />
+      ))}
+    </main>
+  );
+};
 
 export { Users };
