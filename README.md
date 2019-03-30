@@ -1,6 +1,11 @@
 # users-posts-app
 
-This app was build to practice tests with [Jest](https://github.com/facebook/jest) and [react-testing-library](https://github.com/kentcdodds/react-testing-library/) along with React and TypeScript. The [JSONPlaceholder API](https://jsonplaceholder.typicode.com/) was used to get some mock data.
+This app was build to practice tests with
+[Jest](https://github.com/facebook/jest) and
+[react-testing-library](https://github.com/kentcdodds/react-testing-library/)
+along with React and TypeScript. The
+[JSONPlaceholder API](https://jsonplaceholder.typicode.com/) was used to get
+some mock data.
 
 ## Run locally
 

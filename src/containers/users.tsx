@@ -55,4 +55,4 @@ const Users = () => {
   );
 };
 
-export { Users };
+export default Users;

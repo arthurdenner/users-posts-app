@@ -8,4 +8,4 @@ const NotFoundPage = () => (
   </EmptyContent>
 );
 
-export { NotFoundPage };
+export default NotFoundPage;

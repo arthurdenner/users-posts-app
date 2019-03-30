@@ -4,7 +4,7 @@ import { render, wait } from '../../../test/app-test-utils';
 import { fakePost } from '../../components/__tests__/post';
 import { fakeUser } from '../../components/__tests__/user';
 import { fetchPosts, fetchUserById } from '../../services/api';
-import { Posts } from '../posts';
+import Posts from '../posts';
 
 const mockFetchPosts = fetchPosts as jest.Mock;
 const mockFetchUserById = fetchUserById as jest.Mock;

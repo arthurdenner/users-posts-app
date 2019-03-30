@@ -73,4 +73,4 @@ function Posts({ match }: RouteComponentProps) {
   );
 }
 
-export { Posts };
+export default Posts;

@@ -2,7 +2,7 @@ import React from 'react';
 import { fetchUsers } from '../../services/api';
 import { render, wait } from '../../../test/app-test-utils';
 import { fakeUser } from '../../components/__tests__/user';
-import { Users } from '../users';
+import Users from '../users';
 
 const mockFetchUsers = fetchUsers as jest.Mock;
 
