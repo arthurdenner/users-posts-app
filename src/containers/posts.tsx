@@ -20,13 +20,13 @@ function Posts({ match }: RouteComponentProps) {
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const [error, setError] = useState<string | undefined>(undefined);
 
-  async function getUserAndTheirPosts() {
+  async function getUserAndTheirPosts(idUser: string) {
     try {
       setStatus(Status.LOADING);
 
       const [userResponse, postsResponse] = await Promise.all([
-        fetchUserById(userId),
-        fetchPosts(userId),
+        fetchUserById(idUser),
+        fetchPosts(idUser),
       ]);
 
       setStatus(Status.LOADED);
@@ -39,8 +39,8 @@ function Posts({ match }: RouteComponentProps) {
   }
 
   useEffect(() => {
-    getUserAndTheirPosts();
-  }, []);
+    getUserAndTheirPosts(userId);
+  }, [userId]);
 
   if (status === Status.LOADING) {
     return <EmptyContent message="Loading posts..." />;
@@ -49,7 +49,13 @@ function Posts({ match }: RouteComponentProps) {
   if (error) {
     return (
       <EmptyContent message={error}>
-        <button onClick={getUserAndTheirPosts}>Retry</button>
+        <button
+          onClick={() => {
+            getUserAndTheirPosts(userId);
+          }}
+        >
+          Retry
+        </button>
       </EmptyContent>
     );
   }
