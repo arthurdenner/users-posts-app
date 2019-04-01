@@ -1,50 +1,22 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { EmptyContent } from '../components/empty-content';
 import { Post } from '../components/post';
 import { ReturnToUsers } from '../components/return-to-users';
+import useFetch, { Status } from '../hooks/use-fetch';
 import { fetchPosts, fetchUserById } from '../services/api';
-import { IPost, IUser } from '../types/global';
 
-enum Status {
-  ERROR,
-  LOADING,
-  LOADED,
-}
-
-function Posts({ match }: RouteComponentProps) {
-  const { params } = match;
-  const { userId } = params as { userId: string };
-  const [status, setStatus] = useState(Status.LOADING);
-  const [posts, setPosts] = useState<IPost[]>([]);
-  const [user, setUser] = useState<IUser | undefined>(undefined);
-  const [error, setError] = useState<string | undefined>(undefined);
-
-  const memoizedGetUserAndTheirPosts = useCallback(() => {
-    async function getUserAndTheirPosts() {
-      try {
-        setStatus(Status.LOADING);
-
-        const [userResponse, postsResponse] = await Promise.all([
-          fetchUserById(userId),
-          fetchPosts(userId),
-        ]);
-
-        setStatus(Status.LOADED);
-        setPosts(postsResponse);
-        setUser(userResponse);
-      } catch (err) {
-        setError(err.message);
-        setStatus(Status.ERROR);
-      }
-    }
-
-    getUserAndTheirPosts();
-  }, [userId]);
-
-  useEffect(() => {
-    memoizedGetUserAndTheirPosts();
-  }, [memoizedGetUserAndTheirPosts]);
+function Posts({ match }: RouteComponentProps<{ userId: string }>) {
+  const { userId } = match.params;
+  const memoizedFetch = useCallback(
+    () => Promise.all([fetchUserById(userId), fetchPosts(userId)]),
+    [userId]
+  );
+  const { data, error, status, runFetch: getUserAndTheirPosts } = useFetch(
+    memoizedFetch,
+    [undefined, []]
+  );
+  const [user, posts] = data;
 
   if (status === Status.LOADING) {
     return <EmptyContent message="Loading posts..." />;
@@ -53,7 +25,7 @@ function Posts({ match }: RouteComponentProps) {
   if (error) {
     return (
       <EmptyContent message={error}>
-        <button onClick={memoizedGetUserAndTheirPosts}>Retry</button>
+        <button onClick={getUserAndTheirPosts}>Retry</button>
       </EmptyContent>
     );
   }

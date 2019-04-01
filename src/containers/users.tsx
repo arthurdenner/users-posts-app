@@ -1,37 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { EmptyContent } from '../components/empty-content';
 import { User } from '../components/user';
+import useFetch, { Status } from '../hooks/use-fetch';
 import { fetchUsers } from '../services/api';
-import { IUser } from '../types/global';
-
-enum Status {
-  ERROR,
-  LOADING,
-  LOADED,
-}
 
 const Users = () => {
-  const [status, setStatus] = useState(Status.LOADING);
-  const [users, setUsers] = useState<IUser[]>([]);
-  const [error, setError] = useState<string | undefined>(undefined);
-
-  async function getUsers() {
-    try {
-      setStatus(Status.LOADING);
-
-      const usersResponse = await fetchUsers();
-
-      setStatus(Status.LOADED);
-      setUsers(usersResponse);
-    } catch (err) {
-      setError(err.message);
-      setStatus(Status.ERROR);
-    }
-  }
-
-  useEffect(() => {
-    getUsers();
-  }, []);
+  const { data: users, error, status, runFetch: getUsers } = useFetch(
+    fetchUsers,
+    []
+  );
 
   if (status === Status.LOADING) {
     return <EmptyContent message="Loading users..." />;
